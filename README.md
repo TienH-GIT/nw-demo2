@@ -1,15 +1,18 @@
 # nw-demo2
 The 2nd demo project
 
-* Tech
+### Tech
+---
 - VB.Net
 - ASP.Net MVC 6
 
-* Feature
+### Feature
+---
 - Include account & verify user
 - Base Employee management
 
-* Try
+### Try
+---
 - Master table
 - One-to-One relationship
 - Load dropdownlist by master table
