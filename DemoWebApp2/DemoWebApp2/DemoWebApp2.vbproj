@@ -49,15 +49,48 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Cecil, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Xml, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -197,12 +230,18 @@
     <Compile Include="App_Start\IdentityConfig.vb" />
     <Compile Include="App_Start\RouteConfig.vb" />
     <Compile Include="App_Start\Startup.Auth.vb" />
+    <Compile Include="App_Start\WebApiConfig.vb" />
     <Compile Include="Business\EmpLogic.vb" />
     <Compile Include="Controllers\AccountController.vb" />
+    <Compile Include="Controllers\API\EmpController.vb" />
+    <Compile Include="Controllers\API\EmpRESTController.vb" />
     <Compile Include="Controllers\BranchController.vb" />
+    <Compile Include="Controllers\DepartmentController.vb" />
     <Compile Include="Controllers\EmployeeController.vb" />
     <Compile Include="Controllers\JobTitleController.vb" />
     <Compile Include="Controllers\ManageController.vb" />
+    <Compile Include="Controllers\ProjectController.vb" />
+    <Compile Include="Controllers\ProjectEmployeeController.vb" />
     <Compile Include="DAL\EmployeeContext.vb" />
     <Compile Include="DAL\EmployeeInitializer.vb" />
     <Compile Include="EntityConfigs\BranchEntityConfig.vb" />
@@ -224,8 +263,15 @@
       <DependentUpon>202001310722283_Mod_UniqueCodeProp.vb</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202001310722283_Mod_UniqueCodeProp.vb" />
+    <Compile Include="Migrations\202002030746434_Add_Feature_Project.Designer.vb">
+      <DependentUpon>202002030746434_Add_Feature_Project.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002030746434_Add_Feature_Project.vb" />
     <Compile Include="Migrations\Configuration.vb" />
     <Compile Include="Models\AccountViewModels.vb" />
+    <Compile Include="Models\Department.vb" />
+    <Compile Include="Models\Project.vb" />
+    <Compile Include="Models\ProjectEmployee.vb" />
     <Compile Include="Models\Branch.vb" />
     <Compile Include="Models\Employee.vb" />
     <Compile Include="Models\IdentityModels.vb" />
@@ -259,6 +305,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001310722283_Mod_UniqueCodeProp.resx">
       <DependentUpon>202001310722283_Mod_UniqueCodeProp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002030746434_Add_Feature_Project.resx">
+      <DependentUpon>202002030746434_Add_Feature_Project.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -398,6 +447,7 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
+    <Content Include="Scripts\Views\EmpIndex.js" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.vbhtml" />
     <Content Include="Views\Account\ConfirmEmail.vbhtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.vbhtml" />
@@ -433,6 +483,21 @@
     <Content Include="Views\JobTitle\Details.vbhtml" />
     <Content Include="Views\JobTitle\Edit.vbhtml" />
     <Content Include="Views\JobTitle\Index.vbhtml" />
+    <Content Include="Views\Department\Create.vbhtml" />
+    <Content Include="Views\Department\Delete.vbhtml" />
+    <Content Include="Views\Department\Details.vbhtml" />
+    <Content Include="Views\Department\Edit.vbhtml" />
+    <Content Include="Views\Department\Index.vbhtml" />
+    <Content Include="Views\Project\Create.vbhtml" />
+    <Content Include="Views\Project\Delete.vbhtml" />
+    <Content Include="Views\Project\Details.vbhtml" />
+    <Content Include="Views\Project\Edit.vbhtml" />
+    <Content Include="Views\Project\Index.vbhtml" />
+    <Content Include="Views\ProjectEmployee\Create.vbhtml" />
+    <Content Include="Views\ProjectEmployee\Delete.vbhtml" />
+    <Content Include="Views\ProjectEmployee\Details.vbhtml" />
+    <Content Include="Views\ProjectEmployee\Edit.vbhtml" />
+    <Content Include="Views\ProjectEmployee\Index.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

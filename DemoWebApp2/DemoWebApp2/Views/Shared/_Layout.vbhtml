@@ -31,11 +31,11 @@
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Branch", "Index", "Branch")</li>
                             <li>@Html.ActionLink("Job Title", "Index", "JobTitle")</li>
-                            <li><a href="#">Something else here</a></li>
+                            <li>@Html.ActionLink("Department", "Index", "Department")</li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
+                            <li>@Html.ActionLink("Project", "Index", "Project")</li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">One more separated link</a></li>
+                            <li>@Html.ActionLink("Project Assigned", "Index", "ProjectEmployee")</li>
                         </ul>
                     </li>
                 </ul>
