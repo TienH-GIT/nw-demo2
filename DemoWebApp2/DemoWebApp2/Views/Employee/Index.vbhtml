@@ -9,7 +9,7 @@ End Code
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+<table class="table" id="EmpList">
     <tr>
         <th>
             @Html.DisplayNameFor(Function(model) model.Code)
@@ -28,7 +28,8 @@ End Code
 
     @For Each item In Model
         @<tr>
-            <td>
+            <td class="ViewCell">
+                @Html.HiddenFor(Function(modelItem) item.ID, New With {.class = "EmpID"})
                 @Html.DisplayFor(Function(modelItem) item.Code)
             </td>
             <td>
@@ -49,3 +50,12 @@ End Code
     Next
 
 </table>
+
+@Section Scripts
+    <script type="text/javascript">
+        var myApp = myApp || {};
+        myApp.empUrl = '@Url.Action("Emp", "api")';
+    </script>
+
+    <script type="text/javascript" src="@Url.Content("/Scripts/Views/EmpIndex.js")"></script>
+End Section

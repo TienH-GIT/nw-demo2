@@ -1,8 +1,10 @@
 ﻿Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports DemoWebApp2.DAL
 
 Namespace Models
     Public Class Employee
+        Implements IValidatableObject
         Public Property ID As Integer
         <Required>
         <MaxLength(20)>
@@ -27,5 +29,23 @@ Namespace Models
 
         Public Property BranchID As Integer
         Public Overridable Property Branch As Branch
+
+        Public Overridable Property ProjectEmployees As ICollection(Of ProjectEmployee)
+
+#Region "Validation"
+        Function Validate(validationContext As ValidationContext) As IEnumerable(Of ValidationResult) Implements IValidatableObject.Validate
+            Dim results As List(Of ValidationResult) = New List(Of ValidationResult)
+            Dim db As New EmployeeContext
+
+            Dim validateCode = db.Employees.FirstOrDefault(Function(x) x.Code.Equals(Code) And x.ID <> ID)
+            If validateCode IsNot Nothing Then
+                results.Add(New ValidationResult("コードは既に存在します。", {"Code"}))
+
+            Else
+                results.Add(ValidationResult.Success)
+            End If
+            Return results
+        End Function
+#End Region
     End Class
 End Namespace

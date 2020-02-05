@@ -2,6 +2,7 @@
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Models
+
     Public Enum GenderEnum
         Male
         Female
