@@ -1,35 +1,43 @@
 ﻿(function ($, window, myApp) {
     'use strict';
 
-    $('#EmpList').on('dblclick', 'tbody tr td:first-child', function (e) {
-        // Require obj ID
+    $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        title: "View Details"
+    });
+
+    $('#EmpList').on('click', 'tbody tr td:first-child', function (e) {
+        // Acquire ID
         var id = $(this).find('input').val();
         // Get detail info
         getEmpDetail(id);
     });
 
     function getEmpDetail(id) {
+        var options = { "backdrop": "static", keyboard: true };
+        //var url = myApp.empAPI + "/" + id;
         var url = myApp.empUrl + "/" + id;
         $.ajax({
             method: 'GET',
             url: url,
             success: function (data) {
                 // DO SOMETHING HERE
-                alert(data);
+                //alert(JSON.stringify(data));
+
+                // Using base modal
+                //$('#modalEmpInfo').modal('show');
+
+                // Using Form dialog
+                //$('#dialog').html(data);
+                //$('#dialog').dialog('open');
+
+                // Using Form modal
+                $('#myModalContent').html(data);
+                //$('#myModal').modal(options);
+                $('#myModal').modal('show');
             },
             error: function (xhr, status, error) { }
         });
-    }
-
-    function getEmpDetail2($obj) {
-        var id = $obj.find('input').val();
-        var url = window.location.origin + "/api/Emp/" + id;
-        $.getJSON(url)
-            .done(function (data) {
-                alert(data);
-            })
-            .fail(function (data) {
-                alert("failed!");
-            });
     }
 })(jQuery, window, myApp);
