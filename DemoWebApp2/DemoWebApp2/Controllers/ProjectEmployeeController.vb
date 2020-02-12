@@ -35,7 +35,7 @@ Namespace Controllers
 
         ' GET: ProjectEmployee/Create
         Function Create() As ActionResult
-            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "Name")
+            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "FullName")
             ViewBag.ProjectID = New SelectList(db.Projects, "ProjectID", "Name")
             Return View()
         End Function

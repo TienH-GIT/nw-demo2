@@ -5,7 +5,8 @@ Public Module BundleConfig
     Public Sub RegisterBundles(ByVal bundles As BundleCollection)
 
         bundles.Add(New ScriptBundle("~/bundles/jquery").Include(
-                    "~/Scripts/jquery-{version}.js"))
+                    "~/Scripts/jquery-{version}.js",
+                    "~/Scripts/jquery-ui.js"))
 
         bundles.Add(New ScriptBundle("~/bundles/jqueryval").Include(
                     "~/Scripts/jquery.validate*"))
@@ -23,6 +24,7 @@ Public Module BundleConfig
         bundles.Add(New StyleBundle("~/Content/css").Include(
                   "~/Content/bootstrap.css",
                   "~/Content/bootstrap-datepicker3.css",
+                  "~/Content/jquery-ui.css",
                   "~/Content/site.css"))
     End Sub
 End Module

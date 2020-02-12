@@ -15,6 +15,12 @@ Namespace Models
         Public Property FirstName As String
         <MaxLength(100)>
         Public Property LastName As String
+        <NotMapped>
+        Public ReadOnly Property FullName As String
+            Get
+                Return FirstName + " " + LastName
+            End Get
+        End Property
         <DefaultSettingValue("GETDATE()")>
         Public Property StartDate As Date?
         Public Property RetireDate As Date?

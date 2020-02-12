@@ -33,6 +33,17 @@ Namespace Controllers
             Return View(emp)
         End Function
 
+        ' GET: /Employee/Info/1
+        Function EmpInfo(ByVal id As Integer?) As ActionResult
+            Dim emp As Employee = empLogic.FindEmp(id)
+
+            If IsNothing(emp) Then
+                Return HttpNotFound()
+            End If
+
+            Return PartialView("EmpInfo", emp)
+        End Function
+
         ' GET: /Employee/Create
         Function Create() As ActionResult
             'Dim vmEmp As ViewModelEmp = New ViewModelEmp(Me.db)
