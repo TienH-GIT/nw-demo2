@@ -1,4 +1,5 @@
-﻿@ModelType IEnumerable(Of DemoWebApp2.Models.Employee)
+﻿@Imports DemoWebApp2.Models
+@ModelType DemoWebApp2.Models.EmpViewModel
 @Code
     ViewData("Title") = "List View"
 End Code
@@ -6,40 +7,55 @@ End Code
 <h2>@ViewData("Title").</h2>
 <h3>@ViewData("Message")</h3>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<div class="row">
+    <div class="container">
+        <div class="col-md-2">
+            @Html.ActionLink("Create New", "Create")
+        </div>
+        <div class="col-md-3 col-md-offset-2">
+            @Using (Html.BeginForm("Export", "Employee", FormMethod.Post))
+                @Html.AntiForgeryToken()
+
+                @<div class="form-horizontal">
+                    <input type="submit" value="エクスポート" Class="btn btn-primary" />
+                    <input id="btnImport" type="button" value="インポート" Class="btn btn-primary" />
+                </div>
+            End Using
+        </div>
+    </div>
+</div>
+<hr />
 <div class="table-custom">
     <div class="header">Employees</div>
-    
+
     <table class="table" id="EmpList">
         <tr>
             <th>
-                @Html.DisplayNameFor(Function(model) model.Code)
+                @Html.DisplayNameFor(Function(model) model.Employees.FirstOrDefault().Code)
             </th>
             <th>
-                @Html.DisplayNameFor(Function(model) model.FirstName)
+                @Html.DisplayNameFor(Function(model) model.Employees.FirstOrDefault().FullName)
             </th>
             <th>
-                @Html.DisplayNameFor(Function(model) model.LastName)
+                @Html.DisplayNameFor(Function(model) model.Employees.FirstOrDefault().Detail.Gender)
             </th>
             <th>
-                Age
+                @Html.DisplayNameFor(Function(model) model.Employees.FirstOrDefault().Detail.Age)
             </th>
             <th></th>
         </tr>
 
-        @For Each item In Model
+        @For Each item In Model.Employees
             @<tr>
                 <td class="view-cell">
                     @Html.HiddenFor(Function(modelItem) item.ID, New With {.class = "EmpID"})
                     @Html.DisplayFor(Function(modelItem) item.Code)
                 </td>
                 <td>
-                    @Html.DisplayFor(Function(modelItem) item.FirstName)
+                    @Html.DisplayFor(Function(modelItem) item.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(Function(modelItem) item.LastName)
+                    @Html.DisplayFor(Function(modelItem) item.Detail.Gender)
                 </td>
                 <td>
                     @Html.DisplayFor(Function(modelItem) item.Detail.Age)
@@ -55,6 +71,7 @@ End Code
     </table>
 
 </div>
+
 
 <div id='myModal' class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -75,9 +92,10 @@ End Section
 
 @Section Scripts
     <script type="text/javascript">
-    var myApp = myApp || {};
-    myApp.empAPI = '@Url.Action("Emp", "api")';
-    myApp.empUrl = '@Url.Action("EmpInfo", "Employee")';
+        var myApp = myApp || {};
+        myApp.empAPI = '@Url.Action("Emp", "api")';
+        myApp.empInfoURL = '@Url.Action("EmpInfo", "Employee")';
+        myApp.empImportURL = '@Url.Action("Import", "Employee")';
     </script>
 
     <script type="text/javascript" src="@Url.Content("/Scripts/Views/EmpIndex.js")"></script>

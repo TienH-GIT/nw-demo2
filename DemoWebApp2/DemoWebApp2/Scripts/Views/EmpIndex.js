@@ -7,6 +7,9 @@
         title: "View Details"
     });
 
+    //-------------------------//
+    //      Event handler      //
+    //-------------------------//
     $('#EmpList').on('click', 'tbody tr td:first-child', function (e) {
         // Acquire ID
         var id = $(this).find('input').val();
@@ -14,10 +17,18 @@
         getEmpDetail(id);
     });
 
+    $('#btnImport').on('click', function (e) {
+        // Open Import dialog
+        gotoImportDialog();
+    });
+
+    //-------------------------//
+    //      Logic function     //
+    //-------------------------//
     function getEmpDetail(id) {
-        var options = { "backdrop": "static", keyboard: true };
+        var options = { "backdrop": "true", keyboard: false };
         //var url = myApp.empAPI + "/" + id;
-        var url = myApp.empUrl + "/" + id;
+        var url = myApp.empInfoURL + "/" + id;
         $.ajax({
             method: 'GET',
             url: url,
@@ -34,7 +45,23 @@
 
                 // Using Form modal
                 $('#myModalContent').html(data);
-                //$('#myModal').modal(options);
+                $('#myModal').modal(options);
+                $('#myModal').modal('show');
+            },
+            error: function (xhr, status, error) { }
+        });
+    }
+
+    function gotoImportDialog() {
+        var options = { "backdrop": "static", keyboard: true };
+        var url = myApp.empImportURL;
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (data) {
+                // Using Form modal
+                $('#myModalContent').html(data);
+                $('#myModal').modal(options);
                 $('#myModal').modal('show');
             },
             error: function (xhr, status, error) { }

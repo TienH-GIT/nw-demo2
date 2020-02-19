@@ -51,7 +51,7 @@ Namespace Controllers
                 db.SaveChanges()
                 Return RedirectToAction("Index")
             End If
-            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "Name", projectEmployee.EmployeeID)
+            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "FullName", projectEmployee.EmployeeID)
             ViewBag.ProjectID = New SelectList(db.Projects, "ProjectID", "Name", projectEmployee.ProjectID)
             Return View(projectEmployee)
         End Function
@@ -65,7 +65,7 @@ Namespace Controllers
             If IsNothing(projectEmployee) Then
                 Return HttpNotFound()
             End If
-            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "Name", projectEmployee.EmployeeID)
+            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "FullName", projectEmployee.EmployeeID)
             ViewBag.ProjectID = New SelectList(db.Projects, "ProjectID", "Name", projectEmployee.ProjectID)
             Return View(projectEmployee)
         End Function
@@ -81,7 +81,7 @@ Namespace Controllers
                 db.SaveChanges()
                 Return RedirectToAction("Index")
             End If
-            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "Name", projectEmployee.EmployeeID)
+            ViewBag.EmployeeID = New SelectList(db.Employees, "ID", "FullName", projectEmployee.EmployeeID)
             ViewBag.ProjectID = New SelectList(db.Projects, "ProjectID", "Name", projectEmployee.ProjectID)
             Return View(projectEmployee)
         End Function

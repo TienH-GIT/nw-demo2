@@ -9,15 +9,24 @@ Namespace Models
         <Required>
         <MaxLength(20)>
         <Index("Ix_Code", Order:=1, IsUnique:=True)>
+        <Display(Name:="支店コード")>
         Public Property Code As String
+
         <Required>
         <MaxLength(200)>
+        <Display(Name:="支店名")>
         Public Property Name As String
+
         <MaxLength(200)>
+        <Display(Name:="支店名（カタ）")>
         Public Property KataName As String
+
         <MaxLength(300)>
+        <Display(Name:="住所")>
         Public Property Address As String
+
         <MaxLength(500)>
+        <Display(Name:="説明")>
         Public Property Description As String
 
 #Region "Validation"

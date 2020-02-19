@@ -48,7 +48,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - マイ ASP.NET アプリケーション</p>
+            <p>&copy; @DateTime.Now.Year - NSW_908248 アプリケーション</p>
         </footer>
     </div>
 

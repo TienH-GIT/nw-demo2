@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -76,6 +75,9 @@
     </Reference>
     <Reference Include="Mono.Cecil.Rocks, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Interfaces.5.8.0\lib\net45\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -235,6 +237,8 @@
     <Compile Include="App_Start\RouteConfig.vb" />
     <Compile Include="App_Start\Startup.Auth.vb" />
     <Compile Include="App_Start\WebApiConfig.vb" />
+    <Compile Include="Business\EmpCsvImpSrv.vb" />
+    <Compile Include="Business\EmpCsvExpSrv.vb" />
     <Compile Include="Business\EmpLogic.vb" />
     <Compile Include="Controllers\AccountController.vb" />
     <Compile Include="Controllers\API\EmpController.vb" />
@@ -252,9 +256,12 @@
     <Compile Include="EntityConfigs\EmployeeEntityConfig.vb" />
     <Compile Include="EntityConfigs\JobTitleEntityConfig.vb" />
     <Compile Include="EntityConfigs\PersonalInfoEntityConfig.vb" />
+    <Compile Include="Extensions\UploadFileAttribute.vb" />
+    <Compile Include="Extensions\EnumHelper.vb" />
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\ExtensionMethods.vb" />
     <Compile Include="Migrations\202001310450496_SyncAutoGenAuth.Designer.vb">
       <DependentUpon>202001310450496_SyncAutoGenAuth.vb</DependentUpon>
     </Compile>
@@ -273,6 +280,7 @@
     <Compile Include="Migrations\202002030746434_Add_Feature_Project.vb" />
     <Compile Include="Migrations\Configuration.vb" />
     <Compile Include="Models\AccountViewModels.vb" />
+    <Compile Include="Models\CsvFile.vb" />
     <Compile Include="Models\Department.vb" />
     <Compile Include="Models\Project.vb" />
     <Compile Include="Models\ProjectEmployee.vb" />
@@ -282,6 +290,7 @@
     <Compile Include="Models\JobTitle.vb" />
     <Compile Include="Models\ManageViewModels.vb" />
     <Compile Include="Models\PersonalInfo.vb" />
+    <Compile Include="Models\ViewModels\EmpViewModel.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -366,6 +375,9 @@
     <Content Include="Content\bootstrap-datepicker.standalone.css.map" />
     <Content Include="Content\bootstrap-datepicker.css.map" />
     <Content Include="Content\Views\EmpIndex.scss" />
+    <Content Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </Content>
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -526,6 +538,9 @@
     <Content Include="Views\ProjectEmployee\Index.vbhtml" />
     <Content Include="Views\Shared\Modal\EmpInfoModal.vbhtml" />
     <Content Include="Views\Employee\EmpInfo.vbhtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Enum.vbhtml" />
+    <Content Include="Views\Shared\EditorTemplates\Enum.vbhtml" />
+    <Content Include="Views\Employee\EmpImport.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -588,7 +603,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\BuildWebCompiler.1.12.405\build\BuildWebCompiler.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BuildWebCompiler.1.12.405\build\BuildWebCompiler.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props'))" />
   </Target>
   <Import Project="..\packages\BuildWebCompiler.1.12.405\build\BuildWebCompiler.targets" Condition="Exists('..\packages\BuildWebCompiler.1.12.405\build\BuildWebCompiler.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -19,6 +19,27 @@ Namespace Business
             LoadEmployee(empId)
         End Sub
 
+        Public Function IsExistedCode(ByVal Code As String) As Boolean
+            Dim validateCode = _db.Employees.FirstOrDefault(Function(x) x.Code.Equals(Code))
+            If validateCode IsNot Nothing Then
+                Return True
+            End If
+            Return False
+        End Function
+
+        ''' <summary>
+        ''' Get structure for Employee ViewModdel
+        ''' <para>+ List all data of Employee</para>
+        ''' <para>+ Init CsvFile</para>
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function GetEmpViewModel() As EmpViewModel
+            Dim empVMD As EmpViewModel = New EmpViewModel()
+            empVMD.Employees = _db.Employees.ToList()
+            empVMD.CsvFile = New CsvFile
+            Return empVMD
+        End Function
+
         ''' <summary>
         ''' Get all data of Employee
         ''' </summary>

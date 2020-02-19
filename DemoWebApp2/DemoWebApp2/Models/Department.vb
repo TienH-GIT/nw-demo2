@@ -15,16 +15,25 @@ Namespace Models
         End Enum
 
         Public Property DepartmentID As Integer
+
         <Required>
         <MaxLength(20)>
         <Index("Ix_Code", Order:=1, IsUnique:=True)>
+        <Display(Name:="部門コード")>
         Public Property Code As String
+
         <Required>
         <MaxLength(200)>
+        <Display(Name:="部門名")>
         Public Property Name As String
+
+        <Display(Name:="事業エリア")>
         Public Property BusinessAreas As BusinessAreasEnum?
+
         <MaxLength(500)>
+        <Display(Name:="説明")>
         Public Property Description As String
+
 
         Public Overridable Property Projects As ICollection(Of Project)
 

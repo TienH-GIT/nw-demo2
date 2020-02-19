@@ -5,28 +5,43 @@ Imports DemoWebApp2.DAL
 Namespace Models
     Public Class Employee
         Implements IValidatableObject
+
         Public Property ID As Integer
+
         <Required>
         <MaxLength(20)>
         <Index("Ix_Code", Order:=1, IsUnique:=True)>
+        <Display(Name:="従業員コード")>
         Public Property Code As String
+
         <Required>
         <MaxLength(100)>
+        <Display(Name:="名")>
         Public Property FirstName As String
+
         <MaxLength(100)>
+        <Display(Name:="苗字")>
         Public Property LastName As String
+
         <NotMapped>
+        <Display(Name:="姓名")>
         Public ReadOnly Property FullName As String
             Get
                 Return FirstName + " " + LastName
             End Get
         End Property
+
         <DefaultSettingValue("GETDATE()")>
+        <Display(Name:="入社日")>
         Public Property StartDate As Date?
+
+        <Display(Name:="退職日")>
         Public Property RetireDate As Date?
 
         <DefaultSettingValue("False")>
+        <Display(Name:="有効性")>
         Public Property IsActive As Boolean
+
 
         Public Overridable Property Detail As PersonalInfo
 
