@@ -290,6 +290,7 @@
     <Compile Include="Models\JobTitle.vb" />
     <Compile Include="Models\ManageViewModels.vb" />
     <Compile Include="Models\PersonalInfo.vb" />
+    <Compile Include="Models\ViewModels\EmpImportModel.vb" />
     <Compile Include="Models\ViewModels\EmpViewModel.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -375,9 +376,6 @@
     <Content Include="Content\bootstrap-datepicker.standalone.css.map" />
     <Content Include="Content\bootstrap-datepicker.css.map" />
     <Content Include="Content\Views\EmpIndex.scss" />
-    <Content Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </Content>
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -484,6 +482,7 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
+    <Content Include="Scripts\Views\EmpImport.js" />
     <Content Include="Scripts\Views\EmpIndex.js" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.vbhtml" />
     <Content Include="Views\Account\ConfirmEmail.vbhtml" />

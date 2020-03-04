@@ -21,7 +21,18 @@ Public Class EmpCsvImpSrv
     ''' <summary>
     ''' ヘッダー定義
     ''' </summary>
-    Private headers As String() = {"親_名前", "親_性別", "親_メールアドレス", "子1_名前", "子1_性別", "子1_生年月日", "子2_名前", "子2_性別", "子2_生年月日"}
+    Private headers As String() = {
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Code),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Branch.Name),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.JobTitle.Name),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.FullName),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Detail.Gender),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Detail.Birthday),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Detail.Age),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Detail.Address),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Detail.Status),
+        ExtensionMethods.GetDisplayName(Of Employee)(Function(t) t.Detail.Hobby)
+    }
 
     ''' <summary>
     ''' CSV 1行における Parent 1 つを構成するカラム数
@@ -46,7 +57,7 @@ Public Class EmpCsvImpSrv
     ''' <summary>
     ''' Parent モデルのリスト。IsValid プロパティが false の場合は内容の有効性が保証されない。
     ''' </summary>
-    Public EmpList As List(Of Employee) = New List(Of Employee)()
+    Public EmpList As List(Of EmpImportModel) = New List(Of EmpImportModel)()
 
 
     ''' <summary>
@@ -83,7 +94,7 @@ Public Class EmpCsvImpSrv
             ErrorMessageList.Add("読み込むデータがありません。")
         End If
 
-        IsValid = ErrorMessageList.Count > 0
+        IsValid = ErrorMessageList.Count <= 0
     End Sub
 
 
@@ -122,7 +133,7 @@ Public Class EmpCsvImpSrv
 
         For i As Integer = 0 To max - 1
 
-            If headers(i) IsNot csvHeader(i) Then
+            If Not headers(i).Equals(csvHeader(i), StringComparison.OrdinalIgnoreCase) Then
                 IsValid = False
                 ErrorMessageList.Add("ヘッダー[ " & headers(i) & " ]の値が一致しません。")
             End If
@@ -131,7 +142,7 @@ Public Class EmpCsvImpSrv
 
 
     ''' <summary>
-    ''' 1行分 の CSV を検証し、Parent および Child インスタンスを生成して ParentList プロパティに追加します。
+    ''' 1行分 の CSV を検証し、データインスタンスを生成して 従業員 プロパティに追加します。
     ''' 検証 NG の場合はエラーメッセージをプロパティに追加します。
     ''' 検証 NG の場合でもインスタンスを生成しますが、内容は保証されません。
     ''' </summary>
@@ -139,17 +150,88 @@ Public Class EmpCsvImpSrv
     ''' <param name="rowContent">1 行分の CSV 要素配列</param>
     Private Sub ValidateLineAndMakeEmp(ByVal rowNumber As Integer, ByVal rowContent As String())
         Dim columnNumber As Integer = 0
-        Dim emp = New Employee
-        ' 親_名前
-        emp.Code = ValidateAndGetRequiredCode(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
-        ' 親_性別
-        emp.FirstName = ValidateAndGetRequiredString(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
-        ' 親_メールアドレス
-        emp.LastName = ValidateAndGetRequiredString(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
-        Dim childCount = GetChildCountInRow(rowContent.Length)
 
-        EmpList.Add(emp)
+        '*** 従業員の情報 ***'
+        Dim emp = BindEmpInfo(rowNumber, rowContent, columnNumber)
+
+        '*** 詳細の情報 ***'
+        Dim empDtl = BindEmpDetailInfo(rowNumber, rowContent, columnNumber)
+
+        '*** データを登録 ***'
+        Dim empImp = New EmpImportModel With {
+            .Employee = emp,
+            .EmpDetail = empDtl
+        }
+        EmpList.Add(empImp)
     End Sub
+
+
+    ''' <summary>
+    ''' Bind Employee infos
+    ''' </summary>
+    ''' <param name="rowNumber"></param>
+    ''' <param name="rowContent"></param>
+    ''' <param name="columnNumber"></param>
+    ''' <returns></returns>
+    Private Function BindEmpInfo(ByVal rowNumber As Integer, ByVal rowContent As String(), ByRef columnNumber As Integer)
+        Dim emp = New Employee
+
+        ' 従業員コード
+        emp.Code = ValidateAndGetRequiredCode(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
+        ' 支店ID
+        Dim branchId = ValidateAndGetRequiredString(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
+        If IsNumeric(branchId) Then
+            emp.BranchID = branchId
+        Else
+            emp.BranchID = empLogic.FindBranchByName(branchId).BranchID
+        End If
+        ' 役職ID
+        Dim jobId = ValidateAndGetRequiredString(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
+        If IsNumeric(jobId) Then
+            emp.JobTitleID = jobId
+        Else
+            emp.JobTitleID = empLogic.FindJobTitleByName(jobId).JobTitleID
+        End If
+        ' 姓名
+        Dim fullName = ValidateAndGetRequiredString(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
+        Dim firstName As String = fullName.Substring(0, fullName.IndexOf(" "))
+        Dim lastName As String = fullName.Substring(fullName.IndexOf(" ") + 1)
+        ' 従業員の名
+        emp.FirstName = firstName
+        ' 従業員の姓
+        emp.LastName = lastName
+
+        Return emp
+    End Function
+
+
+    ''' <summary>
+    ''' Bind Personal infos
+    ''' </summary>
+    ''' <param name="rowNumber"></param>
+    ''' <param name="rowContent"></param>
+    ''' <param name="columnNumber"></param>
+    ''' <returns></returns>
+    Private Function BindEmpDetailInfo(ByVal rowNumber As Integer, ByVal rowContent As String(), ByRef columnNumber As Integer)
+        Dim empDtl = New PersonalInfo
+
+        ' 性別
+        Dim gender = GetStringOrNull(rowContent, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1))
+        empDtl.Gender = DirectCast([Enum].Parse(GetType(GenderEnum), gender), GenderEnum)
+        ' 誕生日
+        empDtl.Birthday = ValidateAndGetRequiredDateTime(rowNumber, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1), rowContent)
+        ' 年齢
+        empDtl.Age = GetStringOrNull(rowContent, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1))
+        ' 住所
+        empDtl.Address = GetStringOrNull(rowContent, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1))
+        ' 個人状態
+        Dim status = GetStringOrNull(rowContent, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1))
+        empDtl.Status = DirectCast([Enum].Parse(GetType(StatusEnum), status), StatusEnum)
+        ' 趣味
+        empDtl.Hobby = GetStringOrNull(rowContent, Math.Min(Threading.Interlocked.Increment(columnNumber), columnNumber - 1))
+
+        Return empDtl
+    End Function
 
 
     ''' <summary>
@@ -195,7 +277,7 @@ Public Class EmpCsvImpSrv
     ''' <param name="columnNumber">列番号</param>
     ''' <param name="rowContent">1 行分の CSV 要素配列</param>
     ''' <returns>SexId。検証 NG の場合は 0</returns>
-    Private Function ValidateAndGetRequiredCode(ByVal rowNumber As Integer, ByVal columnNumber As Integer, ByVal rowContent As String()) As Integer
+    Private Function ValidateAndGetRequiredCode(ByVal rowNumber As Integer, ByVal columnNumber As Integer, ByVal rowContent As String()) As String
         Dim value = GetStringOrNull(rowContent, columnNumber)
 
         If String.IsNullOrEmpty(value) Then
@@ -204,7 +286,7 @@ Public Class EmpCsvImpSrv
         End If
 
         If empLogic.IsExistedCode(value) Then
-            ErrorMessageList.Add(rowNumber & "行目 : [ " & headers(columnNumber) & " ] の入力値は誤っています。")
+            ErrorMessageList.Add(rowNumber & "行目 : [ " & headers(columnNumber) & " ] の入力値は誤っています（重複）。")
             Return 0
         End If
 

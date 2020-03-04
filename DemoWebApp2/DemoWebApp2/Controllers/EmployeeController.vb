@@ -170,6 +170,38 @@ Namespace Controllers
             Return PartialView("EmpImport")
         End Function
 
+        <HttpPost(), ActionName("ImportCSV")>
+        <ValidateAntiForgeryToken()>
+        Public Function ImportCSV(ByVal file As CsvFile) As ActionResult
+            ' ファイルチェック
+            If Not ModelState.IsValid Then
+                Dim errors = ModelState.Select(Function(x) x.Value.Errors) _
+                    .Where(Function(y) y.Count > 0).ToList()
+                Return Json(New With {.success = 1, .message = errors})
+            End If
+
+            Try
+                ' ファイル読み込み
+                Dim csvImpSrv As EmpCsvImpSrv = New EmpCsvImpSrv(file.UploadFile.InputStream)
+
+                ' バリデーション
+                If Not csvImpSrv.IsValid Then
+                    ViewBag.ErrorMessageList = csvImpSrv.ErrorMessageList
+                    Return Json(New With {.success = 2, .message = ViewBag.ErrorMessageList})
+                End If
+
+                ' DB 登録
+                empLogic.DoImportEmp(csvImpSrv.EmpList)
+
+            Catch ex As Exception
+                Dim errMsg = ex.Message
+                Return Json(New With {.success = 3, .message = errMsg})
+            End Try
+
+            ViewBag.SuccessMessage = "インポートに成功しました。"
+            Return Json(New With {.success = 0, .message = ViewBag.SuccessMessage})
+        End Function
+
         ' POST: /Employee/Import
         <HttpPost(), ActionName("Import")>
         <ValidateAntiForgeryToken()>
@@ -189,7 +221,7 @@ Namespace Controllers
             End If
 
             ' モデル取得
-            Dim empList As List(Of Employee) = csvImpSrv.EmpList
+            Dim empList As List(Of EmpImportModel) = csvImpSrv.EmpList
 
             ' DB 登録
             'empList.ForEach(Function(p) db.Parents.Add(p))

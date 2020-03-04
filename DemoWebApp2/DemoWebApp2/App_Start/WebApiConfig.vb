@@ -10,10 +10,19 @@ Public Module WebApiConfig
         ' Web API routes
         config.MapHttpAttributeRoutes()
 
+        ' GET|PUT|DELETE /api/{resource}/{id}
         config.Routes.MapHttpRoute(
             name:="DefaultApi",
             routeTemplate:="api/{controller}/{id}",
             defaults:=New With {.id = RouteParameter.Optional}
         )
+
+        ' POST /api/{resource}/{action}
+        'config.Routes.MapHttpRoute(
+        '    name:="Web API RPC Post",
+        '    routeTemplate:="api/{controller}/{action}",
+        '    defaults:=Nothing,
+        '    constraints:=New With {.action = "[A-Za-z]+", .httpMethod = New HttpMethodConstraint("POST")}
+        ')
     End Sub
 End Module

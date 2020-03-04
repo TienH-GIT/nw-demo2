@@ -5,7 +5,10 @@ Imports DemoWebApp2.DAL
 Namespace Models
     Public Class Branch
         Implements IValidatableObject
+
+        <Display(Name:="支店ID")>
         Public Property BranchID As Integer
+
         <Required>
         <MaxLength(20)>
         <Index("Ix_Code", Order:=1, IsUnique:=True)>

@@ -44,9 +44,9 @@
                 //$('#dialog').dialog('open');
 
                 // Using Form modal
-                $('#myModalContent').html(data);
-                $('#myModal').modal(options);
-                $('#myModal').modal('show');
+                $('#mdlDetailContent').html(data);
+                $('#mdlDetail').modal(options);
+                $('#mdlDetail').modal('show');
             },
             error: function (xhr, status, error) { }
         });
@@ -60,9 +60,13 @@
             url: url,
             success: function (data) {
                 // Using Form modal
-                $('#myModalContent').html(data);
-                $('#myModal').modal(options);
-                $('#myModal').modal('show');
+                $('#mdlImportContent').html(data);
+                $('#mdlImport').modal(options);
+                $('#mdlImport').modal('show');
+
+                // Undisplay alert as default
+                $("#warnContent").innerHTML = "";
+                $(".alert").hide();
             },
             error: function (xhr, status, error) { }
         });

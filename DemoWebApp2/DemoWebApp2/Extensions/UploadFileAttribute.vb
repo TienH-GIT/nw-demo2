@@ -42,7 +42,8 @@ Public NotInheritable Class UploadFileAttribute
         ' 拡張子を検証
         Dim ext = Path.GetExtension(postedFile.FileName).Replace(".", "")
 
-        If Not String.IsNullOrEmpty(Extensions) AndAlso Not Extensions.Split(";"c).Any(Function(p) p Is ext) Then
+        If Not String.IsNullOrEmpty(Extensions) AndAlso Not _
+                Extensions.Split(";"c).Any(Function(p) p.Equals(ext, StringComparison.OrdinalIgnoreCase)) Then
             ' 許可されていない拡張子なのでエラー
             Return False
         End If

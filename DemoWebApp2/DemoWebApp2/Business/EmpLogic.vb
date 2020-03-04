@@ -8,6 +8,7 @@ Namespace Business
 
         Public Overridable Property Employee As Employee
 
+#Region "Public method"
         Public Sub New(ByRef db As EmployeeContext)
             Me._db = db
         End Sub
@@ -19,6 +20,11 @@ Namespace Business
             LoadEmployee(empId)
         End Sub
 
+        ''' <summary>
+        ''' Check input code is exists in DB or not
+        ''' </summary>
+        ''' <param name="Code"></param>
+        ''' <returns></returns>
         Public Function IsExistedCode(ByVal Code As String) As Boolean
             Dim validateCode = _db.Employees.FirstOrDefault(Function(x) x.Code.Equals(Code))
             If validateCode IsNot Nothing Then
@@ -93,6 +99,24 @@ Namespace Business
         End Function
 
         ''' <summary>
+        ''' Get Branch info by Name
+        ''' </summary>
+        ''' <param name="branchName"></param>
+        ''' <returns></returns>
+        Public Function FindBranchByName(branchName As String) As Branch
+            Return _db.Branches.Where(Function(p) p.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase)).First()
+        End Function
+
+        ''' <summary>
+        ''' Get JobTitle info by Name
+        ''' </summary>
+        ''' <param name="jobName"></param>
+        ''' <returns></returns>
+        Public Function FindJobTitleByName(jobName As String) As JobTitle
+            Return _db.JobTitles.Where(Function(p) p.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase)).First()
+        End Function
+
+        ''' <summary>
         ''' Add new Employee and PersonalInfo as related info
         ''' </summary>
         ''' <param name="emp"></param>
@@ -112,6 +136,11 @@ Namespace Business
             End Try
         End Sub
 
+        ''' <summary>
+        ''' Update Employee and PersonalInfo
+        ''' </summary>
+        ''' <param name="emp"></param>
+        ''' <param name="empDetail"></param>
         Public Sub UpdateEmp(emp As Employee, empDetail As PersonalInfo)
             Try
                 _db.Entry(emp).State = EntityState.Modified
@@ -145,6 +174,21 @@ Namespace Business
         End Sub
 
         ''' <summary>
+        ''' Do action to import Employee data
+        ''' </summary>
+        ''' <param name="empList"></param>
+        Public Sub DoImportEmp(empList As List(Of EmpImportModel))
+            empList.ForEach(
+                Function(p)
+                    AddEmp(p.Employee, p.EmpDetail)
+                    Return True
+                End Function
+            )
+        End Sub
+#End Region
+
+#Region "Private method"
+        ''' <summary>
         ''' Find Employee info then bind to internal class object
         ''' </summary>
         ''' <param name="empId"></param>
@@ -164,4 +208,6 @@ Namespace Business
             Return _db.JobTitles.ToList()
         End Function
     End Class
+#End Region
+
 End Namespace

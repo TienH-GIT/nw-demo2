@@ -5,7 +5,10 @@ Imports DemoWebApp2.DAL
 Namespace Models
     Public Class JobTitle
         Implements IValidatableObject
+
+        <Display(Name:="役職ID")>
         Public Property JobTitleID As Integer
+
         <Required>
         <MaxLength(20)>
         <Index("Ix_Code", Order:=1, IsUnique:=True)>

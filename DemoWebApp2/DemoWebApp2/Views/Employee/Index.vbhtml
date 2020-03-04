@@ -73,15 +73,40 @@ End Code
 </div>
 
 
-<div id='myModal' class="modal fade" role="dialog">
+<div id='mdlDetail' class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div id='myModalContent'></div>
+            <div id='mdlDetailContent'></div>
         </div>
     </div>
 </div>
 
-<div id="dialog" style="display: none">
+<div id='mdlImport' class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='mdlImportContent'></div>
+        </div>
+    </div>
+</div>
+
+<div id="mdlOK" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id='mdlOKContent'></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="dialog" class="divider" style="display: none">
 </div>
 
 @Html.Raw(File.ReadAllText(Server.MapPath("~/Views/Shared/Modal/EmpInfoModal.vbhtml")))
@@ -96,7 +121,10 @@ End Section
         myApp.empAPI = '@Url.Action("Emp", "api")';
         myApp.empInfoURL = '@Url.Action("EmpInfo", "Employee")';
         myApp.empImportURL = '@Url.Action("Import", "Employee")';
+        myApp.doImportAPI = '@Url.Action("Emp/Import", "api")';
+        myApp.doImportURL = '@Url.Action("ImportCSV", "Employee")';
     </script>
 
     <script type="text/javascript" src="@Url.Content("/Scripts/Views/EmpIndex.js")"></script>
+    <script type="text/javascript" src="@Url.Content("/Scripts/Views/EmpImport.js")"></script>
 End Section
