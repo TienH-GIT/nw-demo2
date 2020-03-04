@@ -12,17 +12,10 @@ End Code
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(Function(model) model.FirstName)
+            @Html.DisplayNameFor(Function(model) model.FullName)
         </dt>
         <dd>
-            @Html.DisplayFor(Function(model) model.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(Function(model) model.LastName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(Function(model) model.LastName)
+            @Html.DisplayFor(Function(model) model.FullName)
         </dd>
 
         <dt>

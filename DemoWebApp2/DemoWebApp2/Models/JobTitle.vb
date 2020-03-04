@@ -5,15 +5,23 @@ Imports DemoWebApp2.DAL
 Namespace Models
     Public Class JobTitle
         Implements IValidatableObject
+
+        <Display(Name:="役職ID")>
         Public Property JobTitleID As Integer
+
         <Required>
         <MaxLength(20)>
         <Index("Ix_Code", Order:=1, IsUnique:=True)>
+        <Display(Name:="役職コード")>
         Public Property Code As String
+
         <Required>
         <MaxLength(200)>
+        <Display(Name:="役職名")>
         Public Property Name As String
+
         <MaxLength(500)>
+        <Display(Name:="説明")>
         Public Property Description As String
 
 #Region "Validation"

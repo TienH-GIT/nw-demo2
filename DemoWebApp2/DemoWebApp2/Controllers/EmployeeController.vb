@@ -15,7 +15,7 @@ Namespace Controllers
         Function Index() As ActionResult
             ViewData("Message") = "List All members"
 
-            Return View(empLogic.GetListEmp)
+            Return View(empLogic.GetEmpViewModel)
         End Function
 
         ' GET: /Employee/Details/1
@@ -90,7 +90,7 @@ Namespace Controllers
             Return View(emp)
         End Function
 
-
+        ' POST: /Employee/Edit/1
         <HttpPost(), ActionName("Edit")>
         <ValidateAntiForgeryToken()>
         Function EditPost(ByVal id? As Integer) As ActionResult
@@ -144,6 +144,89 @@ Namespace Controllers
                 'Log the error (uncomment dex variable name and add a line here to write a log.
                 Return RedirectToAction("Delete", New With {.id = id, .saveChangesError = True})
             End Try
+            Return RedirectToAction("Index")
+        End Function
+
+        ' POST: /Employee/Export
+        <HttpPost(), ActionName("Export")>
+        <ValidateAntiForgeryToken()>
+        Function ExportDownloaded() As ActionResult
+            ' DB からデータ取得
+            Dim empList = empLogic.GetListEmp()
+
+            ' CSV 内容生成
+            Dim csvString = EmpCsvExpSrv.CreateCsv(empList)
+
+            ' クライアントにダウンロードさせる形で CSV 出力
+            Dim fileName = String.Format("従業員情報_{0}.csv", Date.Now.ToString("yyyyMMddHHmmss"))
+            ' IE で全角が文字化けするため、ファイル名を UTF-8 でエンコーディング
+            Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", HttpUtility.UrlEncode(fileName, Encoding.UTF8)))
+
+            Return Content(csvString, "text/csv", Encoding.GetEncoding("Shift_JIS"))
+        End Function
+
+        ' GET: /Employee/Import
+        Public Function Import() As ActionResult
+            Return PartialView("EmpImport")
+        End Function
+
+        <HttpPost(), ActionName("ImportCSV")>
+        <ValidateAntiForgeryToken()>
+        Public Function ImportCSV(ByVal file As CsvFile) As ActionResult
+            ' ファイルチェック
+            If Not ModelState.IsValid Then
+                Dim errors = ModelState.Select(Function(x) x.Value.Errors) _
+                    .Where(Function(y) y.Count > 0).ToList()
+                Return Json(New With {.success = 1, .message = errors})
+            End If
+
+            Try
+                ' ファイル読み込み
+                Dim csvImpSrv As EmpCsvImpSrv = New EmpCsvImpSrv(file.UploadFile.InputStream)
+
+                ' バリデーション
+                If Not csvImpSrv.IsValid Then
+                    ViewBag.ErrorMessageList = csvImpSrv.ErrorMessageList
+                    Return Json(New With {.success = 2, .message = ViewBag.ErrorMessageList})
+                End If
+
+                ' DB 登録
+                empLogic.DoImportEmp(csvImpSrv.EmpList)
+
+            Catch ex As Exception
+                Dim errMsg = ex.Message
+                Return Json(New With {.success = 3, .message = errMsg})
+            End Try
+
+            ViewBag.SuccessMessage = "インポートに成功しました。"
+            Return Json(New With {.success = 0, .message = ViewBag.SuccessMessage})
+        End Function
+
+        ' POST: /Employee/Import
+        <HttpPost(), ActionName("Import")>
+        <ValidateAntiForgeryToken()>
+        Public Function Import(ByVal file As CsvFile) As ActionResult
+            ' ファイルチェック
+            If Not ModelState.IsValid Then
+                Return View()
+            End If
+
+            ' ファイル読み込み
+            Dim csvImpSrv As EmpCsvImpSrv = New EmpCsvImpSrv(file.UploadFile.InputStream)
+
+            ' バリデーション
+            If Not csvImpSrv.IsValid Then
+                ViewBag.ErrorMessageList = csvImpSrv.ErrorMessageList
+                Return View()
+            End If
+
+            ' モデル取得
+            Dim empList As List(Of EmpImportModel) = csvImpSrv.EmpList
+
+            ' DB 登録
+            'empList.ForEach(Function(p) db.Parents.Add(p))
+            'db.SaveChanges()
+            ViewBag.SuccessMessage = "インポートに成功しました。"
             Return RedirectToAction("Index")
         End Function
 

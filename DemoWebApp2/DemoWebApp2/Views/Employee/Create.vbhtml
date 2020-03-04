@@ -40,10 +40,14 @@ End Code
         <div class="form-group">
             @Html.LabelFor(Function(model) model.Detail.Gender, New With {.class = "control-label col-md-2"})
             <div class="col-md-10">
+                @Code
+                    Dim lblRadio1 As String = DisplayName(GenderEnum.Male)
+                    Dim lblRadio2 As String = DisplayName(GenderEnum.Female)
+                End Code
                 @Html.RadioButtonFor(Function(model) model.Detail.Gender, "Male", New With {.id = "male"})
-                @Html.Label("male", "Male", New With {.htmlAttributes = New With {.class = "form-control"}})
+                @Html.Label("male", lblRadio1, New With {.htmlAttributes = New With {.class = "form-control"}})
                 @Html.RadioButtonFor(Function(model) model.Detail.Gender, "Female", New With {.id = "female"})
-                @Html.Label("female", "Female", New With {.htmlAttributes = New With {.class = "form-control"}})
+                @Html.Label("female", lblRadio2, New With {.htmlAttributes = New With {.class = "form-control"}})
                 @Html.ValidationMessageFor(Function(model) model.Detail.Gender, "", New With {.class = "text-danger"})
             </div>
         </div>
@@ -89,14 +93,14 @@ End Code
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(Function(model) model.BranchID, htmlAttributes:=New With {.class = "control-label col-sm-2"})
+            @Html.LabelFor(Function(model) model.Branch.Name, htmlAttributes:=New With {.class = "control-label col-sm-2"})
             <div class="col-sm-10">
                 @Html.DropDownListFor(Function(model) model.BranchID, DirectCast(ViewBag.model1, IEnumerable(Of SelectListItem)), "-- SELECT --", New With {.class = "form-control"})
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(Function(model) model.JobTitleID, htmlAttributes:=New With {.class = "control-label col-sm-2"})
+            @Html.LabelFor(Function(model) model.JobTitle.Name, htmlAttributes:=New With {.class = "control-label col-sm-2"})
             <div class="col-sm-10">
                 @Html.DropDownListFor(Function(model) model.JobTitleID, DirectCast(ViewBag.model2, IEnumerable(Of SelectListItem)), "-- SELECT --", New With {.class = "form-control"})
             </div>
